@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMA - Rapport Hebdomadaire</title>
+    <style>
+        :root {
+            --primary: #2c7be5;
+            --primary-light: #e7effd;
+            --primary-dark: #1a68d1;
+            --secondary: #6c757d;
+            --success: #00d97e;
+            --success-light: #e5f9f2;
+            --info: #39afd1;
+            --info-light: #ebf7fb;
+            --warning: #f6c343;
+            --warning-light: #fef7e9;
+            --danger: #e63757;
+            --danger-light: #fceef0;
+            --light: #f9fbfd;
+            --dark: #12263f;
+            --white: #fff;
+            --gray-100: #f6f9fc;
+            --gray-200: #edf2f9;
+            --gray-300: #e3ebf6;
+            --gray-400: #d2ddec;
+            --gray-500: #b1c2d9;
+            --gray-600: #95aac9;
+            --gray-700: #6e84a3;
+            --gray-800: #3b506c;
+            --gray-900: #283e59;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--dark);
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        
+        .menu-title {
+            padding: 10px 20px;
+            color: var(--gray-700);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .menu-item {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+        
+        .menu-item:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .user-role {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+        
+        .breadcrumb .slash {
+            margin: 0 5px;
+        }
+        
+        .breadcrumb .current {
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-bar {
+            position: relative;
+            margin-right: 15px;
+        }
+        
+        .search-bar input {
+            padding: 10px 15px 10px 35px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 14px;
+            width: 250px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn i {
+            margin-right: 5px;
+        }
+        
+        .date-filter {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .date-filter label {
+            font-size: 14px;
+            color: var(--gray-700);
+            margin-right: 10px;
+        }
+        
+        .date-filter select {
+            padding: 8px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--gray-700);
+            margin-right: 15px;
+        }
+        
+        .report-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-card {
+            background-color: var(--gray-100);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .summary-title {
+            font-size: 13px;
+            color: var(--gray-700);
+            margin-bottom: 10px;
+        }
+        
+        .summary-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .summary-change {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .positive-change {
+            color: var(--success);
+        }
+        
+        .negative-change {
+            color: var(--danger);
+        }
+        
+        .chart-container {
+            height: 300px;
+            background-color: var(--gray-100);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+        }
+        
+        .service-distribution {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .service-card {
+            background-color: var(--gray-100);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .service-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 10px;
+        }
+        
+        .service-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .service-count {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .service-amount {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background-color: var(--gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: var(--gray-600);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        td {
+            padding: 15px;
+            font-size: 14px;
+            color: var(--gray-800);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .amount {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .comparison {
+            font-size: 12px;
+            margin-left: 5px;
+        }
+        
+        .higher {
+            color: var(--success);
+        }
+        
+        .lower {
+            color: var(--danger);
+        }
+        
+        .table-footer {
+            background-color: var(--gray-100);
+            font-weight: 700;
+        }
+        
+        .print-export-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray-100);
+        }
+        
+        .daily-stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .daily-stats-tabs {
+            display: flex;
+        }
+        
+        .tab {
+            padding: 8px 15px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .tab-actions select {
+            padding: 6px 10px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        // JavaScript simple pour activer le menu du rapport hebdomadaire
+        document.addEventListener('DOMContentLoaded', function() {
+            // Désactiver tous les éléments du menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Activer le Rapport hebdomadaire
+            document.querySelector('.menu-item[data-page="rapport-hebdomadaire"]').classList.add('active');
+            
+            // Fonction pour basculer entre les onglets
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="logo">Santé<span>Trace</span></h1>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-title">Principal</div>
+            <a href="index.html" class="menu-item">
+                <i>📊</i> Tableau de bord
+            </a>
+            <a href="#" class="menu-item">
+                <i>💰</i> Caisse
+            </a>
+            <a href="#" class="menu-item">
+                <i>💊</i> Pharmacie
+            </a>
+            <a href="#" class="menu-item">
+                <i>🔬</i> Laboratoire
+            </a>
+            
+            <div class="menu-title">Rapports</div>
+            <a href="#" class="menu-item">
+                <i>📝</i> Rapport journalier
+            </a>
+            <a href="#" class="menu-item active" data-page="rapport-hebdomadaire">
+                <i>📅</i> Rapport hebdomadaire
+            </a>
+            <a href="#" class="menu-item">
+                <i>📆</i> Rapport mensuel
+            </a>
+            <a href="#" class="menu-item">
+                <i>📂</i> Historique des rapports
+            </a>
+            
+            <div class="menu-title">Administration</div>
+            <a href="#" class="menu-item">
+                <i>👥</i> Gestion des utilisateurs
+            </a>
+            <a href="#" class="menu-item">
+                <i>⚙️</i> Paramètres
+            </a>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="avatar">JD</div>
+                <div>
+                    <div class="user-name">Jean Dupont</div>
+                    <div class="user-role">Administrateur</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="page-title">
+                <h1>Rapport Hebdomadaire</h1>
+                <div class="breadcrumb">
+                    <span>Accueil</span>
+                    <span class="slash">/</span>
+                    <span>Rapports</span>
+                    <span class="slash">/</span>
+                    <span class="current">Rapport Hebdomadaire</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Rechercher...">
+                </div>
+                <button class="btn btn-primary">
+                    <i>📥</i> Exporter
+                </button>
+            </div>
+        </div>
+        
+        <div class="date-filter">
+            <label>Semaine:</label>
+            <select>
+                <option>14 - 20 Avril 2025</option>
+                <option>7 - 13 Avril 2025</option>
+                <option>31 Mars - 6 Avril 2025</option>
+                <option>24 - 30 Mars 2025</option>
+            </select>
+            
+            <label>Année:</label>
+            <select>
+                <option>2025</option>
+                <option>2024</option>
+            </select>
+        </div>
+        
+        <div class="report-section">
+            <div class="section-header">
+                <div class="section-title">Résumé de la semaine</div>
+            </div>
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-title">Recettes totales</div>
+                    <div class="summary-value">4 250 000 FCFA</div>
+                    <div class="summary-change positive-change">+12% par rapport à la semaine précédente</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">Patients traités</div>
+                    <div class="summary-value">267</div>
+                    <div class="summary-change positive-change">+8% par rapport à la semaine précédente</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">Ordonnances délivrées</div>
+                    <div class="summary-value">223</div>
+                    <div class="summary-change positive-change">+5% par rapport à la semaine précédente</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">Tests de laboratoire</div>
+                    <div class="summary-value">137</div>
+                    <div class="summary-change negative-change">-3% par rapport à la semaine précédente</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                [Graphique des recettes quotidiennes de la semaine]
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <div class="section-header">
+                <div class="section-title">Distribution des services</div>
+            </div>
+            <div class="service-distribution">
+                <div class="service-card">
+                    <div class="service-name">Consultations générales</div>
+                    <div class="service-stats">
+                        <div class="service-count">112 patients</div>
+                        <div class="service-amount">1 680 000 FCFA</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 40%;"></div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">Pharmacie</div>
+                    <div class="service-stats">
+                        <div class="service-count">195 prescriptions</div>
+                        <div class="service-amount">1 170 000 FCFA</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 28%;"></div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">Analyses sanguines</div>
+                    <div class="service-stats">
+                        <div class="service-count">87 tests</div>
+                        <div class="service-amount">652 500 FCFA</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 15%;"></div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">Radiologie</div>
+                    <div class="service-stats">
+                        <div class="service-count">42 examens</div>
+                        <div class="service-amount">462 000 FCFA</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 11%;"></div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">Pédiatrie</div>
+                    <div class="service-stats">
+                        <div class="service-count">28 consultations</div>
+                        <div class="service-amount">168 000 FCFA</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 4%;"></div>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-name">Autres services</div>
+                    <div class="service-stats">
+                        <div class="service-count">19 services</div>
+                        <div class="service-amount">117 500 FCFA</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 2%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <div class="daily-stats-header">
+                <div class="section-title">Rapport journalier</div>
+                <div class="tab-actions">
+                    <select>
+                        <option>Tous les services</option>
+                        <option>Consultations uniquement</option>
+                        <option>Pharmacie uniquement</option>
+                        <option>Laboratoire uniquement</option>
+                    </select>
+                    <div class="daily-stats-tabs">
+                        <div class="tab active">Tableau</div>
+                        <div class="tab">Graphique</div>
+                    </div>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Patients</th>
+                        <th>Ordonnances</th>
+                        <th>Tests labo</th>
+                        <th>Recettes</th>
+                        <th>Comparaison</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Lundi, 14 Avr 2025</td>
+                        <td>52</td>
+                        <td>45</td>
+                        <td>28</td>
+                        <td class="amount">825 000 FCFA</td>
+                        <td><span class="comparison higher">+8%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mardi, 15 Avr 2025</td>
+                        <td>48</td>
+                        <td>40</td>
+                        <td>25</td>
+                        <td class="amount">780 000 FCFA</td>
+                        <td><span class="comparison higher">+5%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mercredi, 16 Avr 2025</td>
+                        <td>45</td>
+                        <td>38</td>
+                        <td>22</td>
+                        <td class="amount">750 000 FCFA</td>
+                        <td><span class="comparison higher">+2%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Jeudi, 17 Avr 2025</td>
+                        <td>46</td>
+                        <td>39</td>
+                        <td>24</td>
+                        <td class="amount">765 000 FCFA</td>
+                        <td><span class="comparison higher">+4%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Vendredi, 18 Avr 2025</td>
+                        <td>43</td>
+                        <td>36</td>
+                        <td>20</td>
+                        <td class="amount">730 000 FCFA</td>
+                        <td><span class="comparison lower">-1%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Samedi, 19 Avr 2025</td>
+                        <td>33</td>
+                        <td>25</td>
+                        <td>18</td>
+                        <td class="amount">400 000 FCFA</td>
+                        <td><span class="comparison lower">-5%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dimanche, 20 Avr 2025</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td class="amount">0 FCFA</td>
+                        <td><span class="comparison">-</span></td>
+                    </tr>
+                    <tr class="table-footer">
+                        <td>Total de la semaine</td>
+                        <td>267</td>
+                        <td>223</td>
+                        <td>137</td>
+                        <td class="amount">4 250 000 FCFA</td>
+                        <td><span class="comparison higher">+12%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="print-export-buttons">
+                <button class="btn btn-secondary">
+                    <i>🖨️</i> Imprimer
+                </button>
+                <button class="btn btn-secondary">
+                    <i>📊</i> Excel
+                </button>
+                <button class="btn btn-secondary">
+                    <i>📄</i> PDF
+                </button>
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <div class="section-header">
+                <div class="section-title">Comparaison avec les semaines précédentes</div>
+            </div>
+            <div class="chart-container">
+                [Graphique comparatif des 4 dernières semaines]
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Période</th>
+                        <th>Patients</th>
+                        <th>Ordonnances</th>
+                        <th>Tests labo</th>
+                        <th>Recettes</th>
+                        <th>Variation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Cette semaine (14-20 Avr)</td>
+                        <td>267</td>
+                        <td>223</td>
+                        <td>137</td>
+                        <td class="amount">4 250 000 FCFA</td>
+                        <td><span class="comparison higher">+12%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Semaine précédente (7-13 Avr)</td>
+                        <td>248</td>
+                        <td>212</td>
+                        <td>141</td>
+                        <td class="amount">3 790 000 FCFA</td>
+                        <td><span class="comparison higher">+5%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Il y a 2 semaines (31 Mars-6 Avr)</td>
+                        <td>236</td>
+                        <td>203</td>
+                        <td>135</td>
+                        <td class="amount">3 620 000 FCFA</td>
+                        <td><span class="comparison lower">-2%</span></td>
+                    </tr>
+                    <tr>
+                        <td>Il y a 3 semaines (24-30 Mars)</td>
+                        <td>241</td>
+                        <td>210</td>
+                        <td>138</td>
+                        <td class="amount">3 680 000 FCFA</td>
+                        <td><span class="comparison higher">+3%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="report-section">
+            <div class="section-header">
+                <div class="section-title">Performance par caissier</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Caissier</th>
+                        <th>Patients servis</th>
+                        <th>Transactions</th>
+                        <th>Montant total</th>
+                        <th>Moyenne par transaction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Marie Koné</td>
+                        <td>96</td>
+                        <td>105</td>
+                        <td class="amount">1 570 000 FCFA</td>
+                        <td class="amount">14 952 FCFA</td>
+                    </tr>
+                    <tr>
+                        <td>Ibrahim Touré</td>
+                        <td>85</td>
+                        <td>90</td>
+                        <td class="amount">1 380 000 FCFA</td>
+                        <td class="amount">15 333 FCFA</td>
+                    </tr>

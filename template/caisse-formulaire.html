@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SantéTrace - Formulaire de Caisse</title>
+    <style>
+        :root {
+            --primary: #2c7be5;
+            --primary-light: #e7effd;
+            --success: #00d97e;
+            --danger: #e63757;
+            --dark: #12263f;
+            --white: #fff;
+            --gray-100: #f6f9fc;
+            --gray-200: #edf2f9;
+            --gray-300: #e3ebf6;
+            --gray-400: #d2ddec;
+            --gray-700: #6e84a3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--dark);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a68d1;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+            border: none;
+        }
+        
+        .btn-success:hover {
+            background-color: #00b86b;
+        }
+        
+        .btn i {
+            margin-right: 5px;
+        }
+        
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .services-list {
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .service-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .service-input {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .service-input input[type="text"] {
+            margin-right: 10px;
+            flex-grow: 1;
+        }
+        
+        .service-input input[type="number"] {
+            width: 100px;
+            text-align: right;
+        }
+        
+        .btn-remove {
+            background-color: var(--danger);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .add-service {
+            display: block;
+            width: 100%;
+            padding: 8px 0;
+            text-align: center;
+            background-color: var(--gray-100);
+            border: 1px dashed var(--gray-400);
+            border-radius: 4px;
+            color: var(--gray-700);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .add-service:hover {
+            background-color: var(--gray-200);
+        }
+        
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px solid var(--gray-300);
+            margin-top: 15px;
+        }
+        
+        .total-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .total-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Receipt styles */
+        #receipt {
+            font-family: 'Courier New', Courier, monospace;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--white);
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            display: none;
+        }
+        
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .receipt-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .receipt-subtitle {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .receipt-date {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .receipt-info {
+            margin-bottom: 20px;
+        }
+        
+        .receipt-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .receipt-table th,
+        .receipt-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px dashed var(--gray-300);
+            font-size: 12px;
+        }
+        
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-top: 15px;
+            border-top: 1px solid var(--gray-300);
+            padding-top: 10px;
+        }
+        
+        .receipt-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+        
+        .row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receipt, #receipt * {
+                visibility: visible;
+            }
+            #receipt {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Formulaire de Caisse - Nouvelle Transaction</div>
+        </div>
+        
+        <form id="caisse-form">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="patient-name">Nom du patient</label>
+                        <input type="text" class="form-control" id="patient-name" required>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="patient-id">ID du patient</label>
+                        <input type="text" class="form-control" id="patient-id" placeholder="Numéro d'identification">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="transaction-date">Date</label>
+                <input type="date" class="form-control" id="transaction-date" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Services / Produits</label>
+                <div class="services-list" id="services-container">
+                    <div class="service-item">
+                        <div class="service-input">
+                            <input type="text" class="form-control" placeholder="Nom du service" required>
+                            <input type="number" class="form-control service-price" placeholder="Prix" required>
+                        </div>
+                        <button type="button" class="btn-remove">✕</button>
+                    </div>
+                </div>
+                <button type="button" class="add-service" id="add-service-btn">+ Ajouter un service/produit</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment-method">Mode de paiement</label>
+                <select class="form-control" id="payment-method" required>
+                    <option value="">Sélectionner un mode de paiement</option>
+                    <option value="cash">Espèces</option>
+                    <option value="card">Carte bancaire</option>
+                    <option value="mobile">Mobile Money</option>
+                    <option value="insurance">Assurance</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea class="form-control" id="notes" rows="3" placeholder="Notes supplémentaires..."></textarea>
+            </div>
+            
+            <div class="total-section">
+                <div class="total-label">Total</div>
+                <div class="total-amount" id="total-amount">0 FCFA</div>
+            </div>
+            
+            <div class="form-footer">
+                <button type="button" class="btn btn-primary" id="print-btn">
+                    <i>🖨️</i> Imprimer le reçu
+                </button>
+                <button type="submit" class="btn btn-success">
+                    <i>💾</i> Enregistrer
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <div id="receipt">
+        <div class="receipt-header">
+            <div class="receipt-title">CLINIQUE SANTÉTRACE</div>
+            <div class="receipt-subtitle">Reçu de Paiement</div>
+            <div class="receipt-date" id="receipt-date">Date: 20/04/2025</div>
+        </div>
+        
+        <div class="receipt-info">
+            <div class="receipt-info-row">
+                <span>N° Transaction:</span>
+                <span id="receipt-transaction-id">TR-2025042001</span>
+            </div>
+            <div class="receipt-info-row">
+                <span>Patient:</span>
+                <span id="receipt-patient-name">---</span>
+            </div>
+            <div class="receipt-info-row">
+                <span>ID Patient:</span>
+                <span id="receipt-patient-id">---</span>
+            </div>
+            <div class="receipt-info-row">
+                <span>Mode de paiement:</span>
+                <span id="receipt-payment-method">---</span>
+            </div>
+        </div>
+        
+        <table class="receipt-table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th style="text-align: right;">Montant</th>
+                </tr>
+            </thead>
+            <tbody id="receipt-services">
+                <!-- Les services seront ajoutés ici dynamiquement -->
+            </tbody>
+        </table>
+        
+        <div class="receipt-total">
+            <span>TOTAL</span>
+            <span id="receipt-total">0 FCFA</span>
+        </div>
+        
+        <div class="receipt-footer">
+            <p>Merci pour votre confiance!</p>
+            <p>SantéTrace - Pour votre bien-être</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Définir la date du jour dans le champ date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('transaction-date').value = today;
+            
+            // Gestion des services
+            const servicesContainer = document.getElementById('services-container');
+            const addServiceBtn = document.getElementById('add-service-btn');
+            
+            // Ajouter un service
+            addServiceBtn.addEventListener('click', function() {
+                const serviceItem = document.createElement('div');
+                serviceItem.className = 'service-item';
+                serviceItem.innerHTML = `
+                    <div class="service-input">
+                        <input type="text" class="form-control" placeholder="Nom du service" required>
+                        <input type="number" class="form-control service-price" placeholder="Prix" required>
+                    </div>
+                    <button type="button" class="btn-remove">✕</button>
+                `;
+                servicesContainer.appendChild(serviceItem);
+                
+                // Ajouter un écouteur d'événement pour le bouton de suppression
+                const removeBtn = serviceItem.querySelector('.btn-remove');
+                removeBtn.addEventListener('click', function() {
+                    servicesContainer.removeChild(serviceItem);
+                    updateTotal();
+                });
+                
+                // Ajouter un écouteur d'événement pour le champ de prix
+                const priceInput = serviceItem.querySelector('.service-price');
+                priceInput.addEventListener('input', updateTotal);
+            });
+            
+            // Supprimer un service
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-remove')) {
+                    const serviceItem = e.target.closest('.service-item');
+                    servicesContainer.removeChild(serviceItem);
+                    updateTotal();
+                }
+            });
+            
+            // Calculer le total
+            function updateTotal() {
+                const priceInputs = document.querySelectorAll('.service-price');
+                let total = 0;
+                
+                priceInputs.forEach(input => {
+                    if (input.value) {
+                        total += parseFloat(input.value);
+                    }
+                });
+                
+                document.getElementById('total-amount').textContent = `${total.toLocaleString()} FCFA`;
+            }
+            
+            // Ajouter un écouteur d'événement pour la mise à jour du total
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('service-price')) {
+                    updateTotal();
+                }
+            });
+            
+            // Gestion du bouton d'impression
+            const printBtn = document.getElementById('print-btn');
+            printBtn.addEventListener('click', function() {
+                // Remplir les informations du reçu
+                const patientName = document.getElementById('patient-name').value;
+                const patientId = document.getElementById('patient-id').value;
+                const paymentMethod = document.getElementById('payment-method');
+                const paymentMethodText = paymentMethod.options[paymentMethod.selectedIndex]?.text || '---';
+                const transactionDate = document.getElementById('transaction-date').value;
+                
+                document.getElementById('receipt-patient-name').textContent = patientName || '---';
+                document.getElementById('receipt-patient-id').textContent = patientId || '---';
+                document.getElementById('receipt-payment-method').textContent = paymentMethodText;
+                
+                // Formater la date
+                const formattedDate = new Date(transactionDate).toLocaleDateString('fr-FR');
+                document.getElementById('receipt-date').textContent = `Date: ${formattedDate}`;
+                
+                // Générer un ID de transaction
+                const transactionId = 'TR-' + new Date().toISOString().substring(0, 10).replace(/-/g, '') + Math.floor(Math.random() * 100).toString().padStart(2, '0');
+                document.getElementById('receipt-transaction-id').textContent = transactionId;
+                
+                // Ajouter les services au reçu
+                const receiptServices = document.getElementById('receipt-services');
+                receiptServices.innerHTML = '';
+                
+                const serviceItems = document.querySelectorAll('.service-item');
+                serviceItems.forEach(item => {
+                    const serviceName = item.querySelector('input[type="text"]').value;
+                    const servicePrice = item.querySelector('.service-price').value;
+                    
+                    if (serviceName && servicePrice) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${serviceName}</td>
+                            <td style="text-align: right;">${parseFloat(servicePrice).toLocaleString()} FCFA</td>
+                        `;
+                        receiptServices.appendChild(row);
+                    }
+                });
+                
+                // Mettre à jour le total sur le reçu
+                document.getElementById('receipt-total').textContent = document.getElementById('total-amount').textContent;
+                
+                // Imprimer le reçu
+                window.print();
+            });
+            
+            // Gestion du formulaire
+            const caisseForm = document.getElementById('caisse-form');
+            caisseForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Ici, vous pouvez ajouter le code pour enregistrer la transaction dans votre système
+                alert('Transaction enregistrée avec succès!');
+                
+                // Réinitialiser le formulaire
+                caisseForm.reset();
+                
+                // Réinitialiser les services (garder uniquement le premier)
+                const serviceItems = document.querySelectorAll('.service-item');
+                for (let i = 1; i < serviceItems.length; i++) {
+                    servicesContainer.removeChild(serviceItems[i]);
+                }
+                
+                // Réinitialiser le premier service
+                const firstServiceItem = document.querySelector('.service-item');
+                if (firstServiceItem) {
+                    firstServiceItem.querySelector('input[type="text"]').value = '';
+                    firstServiceItem.querySelector('.service-price').value = '';
+                }
+                
+                // Réinitialiser le total
+                document.getElementById('total-amount').textContent = '0 FCFA';
+                
+                // Définir la date du jour
+                document.getElementById('transaction-date').value = today;
+            });
+            
+            // Initialiser les écouteurs d'événements pour le premier service
+            const firstPriceInput = document.querySelector('.service-price');
+            if (firstPriceInput) {
+                firstPriceInput.addEventListener('input', updateTotal);
+            }
+            
+            const firstRemoveBtn = document.querySelector('.btn-remove');
+            if (firstRemoveBtn) {
+                firstRemoveBtn.addEventListener('click', function() {
+                    const serviceItem = this.closest('.service-item');
+                    serviceItem.querySelector('input[type="text"]').value = '';
+                    serviceItem.querySelector('.service-price').value = '';
+                    updateTotal();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
